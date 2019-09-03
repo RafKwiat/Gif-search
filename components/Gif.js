@@ -1,4 +1,4 @@
-var GIFY_LOADING_URL = 'http://www.ifmo.ru/images/loader.gif';
+var GIPHY_LOADING_URL = 'http://www.ifmo.ru/images/loader.gif';
 
 var styles = {
     minHeight: '310px',
@@ -7,18 +7,17 @@ var styles = {
 
 Gif = React.createClass({
     getUrl: function() {
-        return this.props.sourceUrl || GIFY_LOADING_URL;
+        return this.props.sourceUrl || GIPHY_LOADING_URL;
     },
-    
     render: function() {
-        var url = this.props.loading ? GIFY_LOADING_URL: this.props.url;
-        
-    return (
-        <div style:{styles}>
-            <a href={this.getUrl()} title='view this on giphy' target'new'>
+        var url = this.props.loading ? GIPHY_LOADING_URL : this.props.url;
+
+        return (
+            <div style={styles}>
+                <a href={this.getUrl()} title='view this on giphy' target='new'>
                 <img id='gif' src={url} style={{width: '100%', maxWidth: '350px'}}/>
-            </a>
-        </div>
+                </a>
+            </div>
         );
     }
 });
