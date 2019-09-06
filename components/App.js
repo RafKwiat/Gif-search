@@ -19,7 +19,7 @@ App = React.createClass ({
         });
         
         this.getGif(searchingText)
-            .then( (response) => {
+            .then(response => {
                 let data = JSON.parse(response).data;
                 let gif = {
                         url: data.fixed_width_downsampled_url,
@@ -42,18 +42,21 @@ App = React.createClass ({
             const url = `${GIPHY_API_URL}/v1/gifs/random?api_key=${GIPHY_PUB_KEY}&tag=${searchingText}`;
             const xhr = new XMLHttpRequest();
             
-            xhr.open('GET', url);
+
             xhr.onload = () => {
-                if (xhr.status === 200) {
+                if (this.status === 200) {
                     resolve(this.reponse);
                     
                 } else {
                     reject(new Error(this.statusText));
                 }
             };
+            
             xhr.onerror = () => {
-                reject(new Error(`Something went wrong, dude :( ${this.statusText}`))
+                reject(new Error(`Something went wrong, dude :( ${this.statusText}`));
             };
+            
+            xhr.open('GET', url);
             
             xhr.send();
         });
@@ -67,6 +70,7 @@ App = React.createClass ({
             textAlign: 'center',
             width: '90%'
         };
+        
         
         return (
             <div style={styles}>
