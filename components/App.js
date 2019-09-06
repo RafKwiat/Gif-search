@@ -13,13 +13,14 @@ App = React.createClass ({
         };
     },
     
-    handleSearch: (searchingText) => {
+    handleSearch: function(searchingText) {
         this.setState({
             loading: true
         });
         
         this.getGif(searchingText)
-            .then(response => {
+            .then(
+                (response) => {
                 let data = JSON.parse(response).data;
                 let gif = {
                         url: data.fixed_width_downsampled_url,
@@ -31,39 +32,39 @@ App = React.createClass ({
                 gif: gif,
                 searchingText: searchingText
             });
-        });
+        })
     },
     
 
     
-    getGif: (searchingText) => {
-        return new Promise((resolve, reject) => {
+    getGif: function(searchingText) {
+        return new Promise(function(resolve, reject) {
             
             const url = `${GIPHY_API_URL}/v1/gifs/random?api_key=${GIPHY_PUB_KEY}&tag=${searchingText}`;
-            const xhr = new XMLHttpRequest();
+            const request = new XMLHttpRequest();
             
 
-            xhr.onload = () => {
+            request.onload = function() {
                 if (this.status === 200) {
-                    resolve(this.reponse);
+                    resolve(this.response);
                     
                 } else {
                     reject(new Error(this.statusText));
                 }
             };
             
-            xhr.onerror = () => {
+            request.onerror = function() {
                 reject(new Error(`Something went wrong, dude :( ${this.statusText}`));
             };
             
-            xhr.open('GET', url);
+            request.open('GET', url);
             
-            xhr.send();
+            request.send();
         });
     },
         
     
-    render: () => {
+    render: function() {
         
         const styles = {
             margin: '0 auto',
@@ -71,7 +72,7 @@ App = React.createClass ({
             width: '90%'
         };
         
-        
+
         return (
             <div style={styles}>
                 <h1>Wyszukiwarka GIFów!</h1>
