@@ -1,3 +1,8 @@
+var GIPHY_API_URL = 'https://api.giphy.com';
+var GIPHY_PUB_KEY = 'dc6zaTOxFJmzC';
+
+
+
 App = React.createClass ({
     
     getInitialState() {
@@ -8,42 +13,56 @@ App = React.createClass ({
         };
     },
     
-    handleSearch: function(searchingText) {
+    handleSearch: (searchingText) => {
         this.setState({
             loading: true
         });
-        this.getGif(searchingText, function(gif) {
+        
+        this.getGif(searchingText)
+            .then( (response) => {
+                let data = JSON.parse(response).data;
+                let gif = {
+                        url: data.fixed_width_downsampled_url,
+                        sourceUrl: data.url
+                    };
+            
             this.setState ({
                 loading: false,
                 gif: gif,
                 searchingText: searchingText
             });
-        }.bind(this));
+        });
     },
     
-    getGif: function(searchingText, callback) {
-        var GIPHY_API_URL = 'https://api.giphy.com';
-        var GIPHY_PUB_KEY = 'dc6zaTOxFJmzC'
-        var url = GIPHY_API_URL + '/v1/gifs/random?api_key=' + GIPHY_PUB_KEY + '&tag=' + searchingText;
-        var xhr = new XMLHttpRequest();
-        
-        xhr.open('GET', url);
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                var data = JSON.parse(xhr.responseText).data;
-                var gif = {
-                    url: data.fixed_width_downsampled_url,
-                    sourceUrl: data.url
-                };
-                callback(gif);
-            }
-        };
-        xhr.send();
-    },
+
     
-    render: function() {
+    getGif: (searchingText) => {
+        return new Promise((resolve, reject) => {
+            
+            const url = `${GIPHY_API_URL}/v1/gifs/random?api_key=${GIPHY_PUB_KEY}&tag=${searchingText}`;
+            const xhr = new XMLHttpRequest();
+            
+            xhr.open('GET', url);
+            xhr.onload = () => {
+                if (xhr.status === 200) {
+                    resolve(this.reponse);
+                    
+                } else {
+                    reject(new Error(this.statusText));
+                }
+            };
+            xhr.onerror = () => {
+                reject(new Error(`Something went wrong, dude :( ${this.statusText}`))
+            };
+            
+            xhr.send();
+        });
+    },
         
-        var styles = {
+    
+    render: () => {
+        
+        const styles = {
             margin: '0 auto',
             textAlign: 'center',
             width: '90%'
